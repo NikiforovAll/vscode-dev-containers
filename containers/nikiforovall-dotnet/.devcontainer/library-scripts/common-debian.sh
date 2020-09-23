@@ -264,9 +264,22 @@ install-oh-my()
         mkdir -p ${OH_MY_INSTALL_DIR}/custom/themes/codespaces
         echo "${CODESPACES_BASH}" > ${OH_MY_INSTALL_DIR}/custom/themes/codespaces/codespaces.theme.sh
     else
+        # ! CUSTOM ADDITIONS, depends on https://github.com/NikiforovAll/dotfiles
         sed -i -e 's/ZSH_THEME=.*/ZSH_THEME="codespaces"/g' ${USER_RC_FILE}
         mkdir -p ${OH_MY_INSTALL_DIR}/custom/themes
         echo "${CODESPACES_ZSH}" > ${OH_MY_INSTALL_DIR}/custom/themes/codespaces.zsh-theme
+        # Install oh my zsh plugins
+        ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+        ZSH_THEME_TO_INSTALL="$ZSH_CUSTOM/themes/spaceship-prompt"
+        ZSH_THEME_TO_SYMLINK="$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+        if [[ ! -d $ZSH_THEME_TO_INSTALL ]]; then
+            git clone https://github.com/denysdovhan/spaceship-prompt.git $ZSH_THEME_TO_INSTALL
+            ln -s "$ZSH_THEME_TO_INSTALL/spaceship.zsh-theme" "$ZSH_THEME_TO_SYMLINK"
+        fi
+
+        # config option fixes line CRLF line endings (<./<file> xxd -p -c1 | grep -n '0[da]' | sort | uniq)
+        git clone -c core.autocrlf=input https://github.com/zsh-users/zsh-syntax-highlighting.git \
+            ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 
     fi
     # Shrink git while still enabling updates
     cd ${OH_MY_INSTALL_DIR} 
@@ -295,6 +308,7 @@ if [ "${INSTALL_ZSH}" = "true" ]; then
         ZSH_ALREADY_INSTALLED="true"
     fi
     install-oh-my zsh zshrc.zsh-template https://github.com/ohmyzsh/ohmyzsh
+    # chsh -s $(which zsh)
 fi
 
 # Write marker file
