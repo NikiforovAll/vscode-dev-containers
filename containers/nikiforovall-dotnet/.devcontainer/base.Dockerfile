@@ -1,4 +1,4 @@
-# [Choice] .NET Core version: 3.1, 2.1
+# [Choice] .NET Core version: 5.0, 3.1, 2.1
 ARG VARIANT="3.1"
 FROM mcr.microsoft.com/dotnet/core/sdk:${VARIANT}-bionic
 
@@ -6,7 +6,8 @@ LABEL Name=nikiforovall/devcontainers/dotnet \
     org.opencontainers.image.source=https://github.com/NikiforovAll/dev-containers.git\
     org.opencontainers.image.description="Base development environment for .NET developer" \
     org.opencontainers.image.url=https://github.com/NikiforovAll/dev-containers.git \
-    MAINTAINER=NikiforovAll
+    MAINTAINER=NikiforovAll \
+    VERSION=0.6.0
 
 # [Option] Install zsh
 ARG INSTALL_ZSH="true"
